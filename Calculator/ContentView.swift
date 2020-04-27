@@ -13,6 +13,10 @@ struct ContentView: View {
     var body: some View {
         VStack(alignment: .trailing, spacing: 18) {
             Text("0").font(.system(size: 78))
+                .minimumScaleFactor(0.5)
+                .padding(.trailing,20)
+            .lineLimit(1)
+                .frame(minWidth:0,maxWidth: .infinity,alignment: .trailing)
             CalcultorButtonPad()
         }
        
