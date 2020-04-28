@@ -51,9 +51,9 @@ extension CalculatorButtonItem {
     
     var size:CGSize {
         if case .digit(let value) = self, value == 0 {
-            return CGSize(width: 88 * 2 + 8, height: 88)
+            return CGSize(width: 80 * 2 + 8, height: 80)
         }
-      return CGSize(width: 88, height: 88)
+      return CGSize(width: 80, height: 80)
     }
     
     var colorName:String{

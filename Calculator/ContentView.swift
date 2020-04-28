@@ -9,15 +9,17 @@
 import SwiftUI
 
 struct ContentView: View {
-   
+    @State private  var brain: CalculatorBrain = .left("0")
     var body: some View {
         VStack(alignment: .trailing, spacing: 18) {
-            Text("0").font(.system(size: 78))
+            Spacer()
+            Text(brain.output).font(.system(size: 78))
                 .minimumScaleFactor(0.5)
                 .padding(.trailing,20)
             .lineLimit(1)
                 .frame(minWidth:0,maxWidth: .infinity,alignment: .trailing)
-            CalcultorButtonPad()
+           
+            CalcultorButtonPad(brain: $brain)
         }
        
     }
@@ -25,7 +27,11 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        Group{
+            
+            ContentView()
+         
+        }
     }
 }
 
@@ -35,11 +41,10 @@ struct CalculatorButton: View {
     let size:CGSize
     let foreground:Color
     let background:Color
+    let action: () ->Void
   
     var body: some View {
-        Button.init(action: {
-            print("action +")
-        }) {
+        Button.init(action: action) {
             
             Text(title)
                 .font(font)
@@ -52,14 +57,17 @@ struct CalculatorButton: View {
 }
 
 struct CalculatorButtonRow: View {
+    @Binding var brain:CalculatorBrain
     let row:[CalculatorButtonItem]
     var body: some View {
         HStack(){
             
-            ForEach(row,id: \.self){
-                item in
+            ForEach(row,id: \.self){  item in
                 
-                CalculatorButton(title: item.title, size: item.size,foreground: .white, background: Color.init(item.colorName))
+                CalculatorButton(title: item.title, size: item.size,foreground: .white, background: Color.init(item.colorName)){
+                    self.brain = self.brain.apply(item: item)
+                }
+                
             }
         }
     }
@@ -67,6 +75,7 @@ struct CalculatorButtonRow: View {
 
 
 struct CalcultorButtonPad: View {
+    @Binding var brain:CalculatorBrain
     let pad:[[CalculatorButtonItem]] = [
     [.command(.clear), .command(.flip),
     .command(.percent), .op(.divide)],
@@ -81,7 +90,7 @@ struct CalcultorButtonPad: View {
         VStack(spacing:8){
             ForEach(pad,id: \.self){
                 row in
-                CalculatorButtonRow(row: row)
+                CalculatorButtonRow(brain: self.$brain, row: row)
             }
         }
     }
